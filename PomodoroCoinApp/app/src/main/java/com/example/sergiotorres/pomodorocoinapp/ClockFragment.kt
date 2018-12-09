@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import kotlinx.android.synthetic.main.fragment_clock.*
 
@@ -24,10 +25,25 @@ class ClockFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+        val view = inflater.inflate(R.layout.fragment_clock, container, false)
         val spinnerAdapter = ArrayAdapter(activity, android.R.layout.simple_spinner_item, mockTags)
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        tagSpinner.adapter = spinnerAdapter
-        return inflater.inflate(R.layout.fragment_clock, container, false)
+        tagSpinner?.adapter = spinnerAdapter
+        tagSpinner?.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                // either one will work as well
+                // val item = parent.getItemAtPosition(position) as String
+                val item = spinnerAdapter.getItem(position)
+            }
+        }
+
+
+
+        return view
     }
 
 

@@ -4,6 +4,13 @@
     <string name="tags">Tags</string>
     <string name="timer">Timer</string>
     <string name="profile">Profile</string>
+    <string name="TAG">TAG</string>
+    <string name="START">START</string>
+    <string name="PAUSE">PAUSE</string>
+    <string name="RESUME">RESUME</string>
+    <string name="STOP">RESET</string>
+    <string name="POMODORO">POMODORO</string>
+    <string name="BREAK">BREAK</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
