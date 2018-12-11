@@ -22,7 +22,6 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction().add(R.id.fragmentLayout, clockFragment, "1").commit()
         //supportFragmentManager.beginTransaction().add(R.id.fragmentLayout, ClockFragment(),"1").commit()
 
-
     }
 
 //    private val bottomNavListener = BottomNavigationView.OnNavigationItemSelectedListener {
