@@ -2,13 +2,16 @@ package com.example.sergiotorres.pomodorocoinapp
 
 
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Spinner
 import kotlinx.android.synthetic.main.fragment_clock.*
+import kotlinx.android.synthetic.main.fragment_clock.view.*
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -21,6 +24,13 @@ private const val ARG_PARAM2 = "param2"
  *
  */
 class ClockFragment : Fragment() {
+
+    private lateinit var timer: CountDownTimer
+    private var isRunning = false
+    private var timerLengthSeconds = 0L
+    private var timerRemainingSeconds = 0L
+
+
     val mockTags = arrayListOf("Work", "Study", "Project")
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -28,7 +38,7 @@ class ClockFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_clock, container, false)
         val spinnerAdapter = ArrayAdapter(activity, android.R.layout.simple_spinner_item, mockTags)
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        tagSpinner?.adapter = spinnerAdapter
+        view.tagSpinner.adapter = spinnerAdapter
         tagSpinner?.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
 
@@ -41,10 +51,37 @@ class ClockFragment : Fragment() {
             }
         }
 
+        view.playButton.setOnClickListener { v ->
+            isRunning = if (isRunning) {
+                pauseTimer()
+                view.playButton.text = getText(R.string.RESUME)
+                false
+            } else {
+                runTimer()
+                view.playButton.text = getText(R.string.PAUSE)
+                true
+            }
+        }
 
+        view.resetButton.setOnClickListener { v ->
+            resetTimer()
+            isRunning = false
+            view.playButton.text = getText(R.string.START)
+        }
 
         return view
     }
+    private fun runTimer() {
+
+    }
+    private fun pauseTimer() {
+
+    }
+    private fun resetTimer() {
+
+    }
+
+
 
 
 }

@@ -19,13 +19,14 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="20dp"
-            android:prompt="@string/TAG"
+            android:layout_marginTop="40dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <RadioGroup
+            android:id="@+id/radioGroup"
+            android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
@@ -33,7 +34,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="40dp"
             app:layout_constraintBottom_toTopOf="@+id/timerText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -45,8 +46,9 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/my_radio_button"
                 android:button="@android:color/transparent"
+                android:padding="10dp"
                 android:checked="true"
-                android:text="@string/POMODORO" />
+                android:text="@string/POMODORO"/>
 
             <RadioButton
                 android:id="@+id/BreakOption"
@@ -54,7 +56,8 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/my_radio_button"
                 android:button="@android:color/transparent"
-                android:text="@string/BREAK" />
+                android:padding="10dp"
+                android:text="@string/BREAK"/>
         </RadioGroup>
 
 
@@ -66,12 +69,15 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="30dp"
             android:text="10:00"
             android:textSize="70sp"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+            app:layout_constraintTop_toBottomOf="@+id/radioGroup"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tagSpinner" />
+            app:layout_constraintBottom_toTopOf="@+id/playButton"
+            tools:layout_editor_absoluteY="104dp" />
 
         <Button
             android:id="@+id/playButton"
