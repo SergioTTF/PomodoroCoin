@@ -3,6 +3,7 @@ package com.example.sergiotorres.pomodorocoinapp
 import android.support.v4.app.Fragment
 import android.app.FragmentManager
 import android.app.FragmentTransaction
+import android.app.NotificationManager
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView

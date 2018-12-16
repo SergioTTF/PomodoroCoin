@@ -1,17 +1,25 @@
 package com.example.sergiotorres.pomodorocoinapp
 
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
+import android.support.v4.app.NotificationCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Spinner
+import android.widget.*
 import kotlinx.android.synthetic.main.fragment_clock.*
 import kotlinx.android.synthetic.main.fragment_clock.view.*
+import android.Manifest
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -27,8 +35,15 @@ class ClockFragment : Fragment() {
 
     private lateinit var timer: CountDownTimer
     private var isRunning = false
-    private var timerLengthSeconds = 0L
-    private var timerRemainingSeconds = 0L
+    private var reseted = true
+    private var timerLength = 15000L
+    private var remainingTime = 0L
+    private var notificationManager:NotificationManager? = null
+    private var notificationIntent:Intent? = null
+    private var contentIntent:PendingIntent? = null
+    companion object {
+        private val NOTIFICATION_CHANNEL_ID = "Timer_Channel"
+    }
 
 
     val mockTags = arrayListOf("Work", "Study", "Project")
@@ -50,14 +65,26 @@ class ClockFragment : Fragment() {
                 val item = spinnerAdapter.getItem(position)
             }
         }
+        view.radioGroup.setOnCheckedChangeListener { _, i ->
+            when (i) {
+                R.id.PomodoroOption -> timerLength = 1500000L
+                R.id.BreakOption -> timerLength = 600000L
+            }
+            resetTimer()
+        }
 
         view.playButton.setOnClickListener { v ->
             isRunning = if (isRunning) {
                 pauseTimer()
                 view.playButton.text = getText(R.string.RESUME)
                 false
-            } else {
+            } else if (reseted) {
                 runTimer()
+                view.playButton.text = getText(R.string.PAUSE)
+                reseted = false
+                true
+            } else {
+                resumeTimer()
                 view.playButton.text = getText(R.string.PAUSE)
                 true
             }
@@ -66,19 +93,83 @@ class ClockFragment : Fragment() {
         view.resetButton.setOnClickListener { v ->
             resetTimer()
             isRunning = false
+            reseted = true
             view.playButton.text = getText(R.string.START)
         }
 
+        this.notificationManager = context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        this.notificationIntent = Intent(context, MainActivity::class.java)
+        this.contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0)
+        createNotifyChannel()
         return view
     }
     private fun runTimer() {
-
+        timer = getTimer(timerLength,1000).start()
     }
     private fun pauseTimer() {
-
+        timer.cancel()
     }
     private fun resetTimer() {
+        if (isRunning)
+            timer.cancel()
+        remainingTime = timerLength
+        timerText.text = formatTime(timerLength)
+    }
+    private fun resumeTimer() {
+        timer = getTimer(remainingTime, 1000).start()
+        timerText.text = formatTime(timerLength)
+    }
 
+    private fun getTimer(millisInFuture:Long,countDownInterval:Long):CountDownTimer{
+        return object: CountDownTimer(millisInFuture,countDownInterval){
+            override fun onTick(millisUntilFinished: Long){
+                remainingTime = millisUntilFinished
+                val timeRemaining = formatTime(millisUntilFinished)
+                timerText.text = timeRemaining
+            }
+
+            override fun onFinish() {
+                remainingTime = timerLength
+                val notification = NotificationCompat.Builder(context!!, NOTIFICATION_CHANNEL_ID)
+                        .setContentTitle("Pomodoro Done!")
+                        .setContentText("blabla")
+                        .setPriority(NotificationCompat.PRIORITY_HIGH)
+                        .setContentIntent(contentIntent)
+                        .setAutoCancel(true)
+                        .setSmallIcon(android.R.drawable.ic_lock_idle_alarm)
+                        .build()
+                notificationManager?.notify(1, notification)
+            }
+        }
+    }
+
+    private fun formatTime(timeInMillis:Long):String {
+        val minutes:Any = if (timeInMillis >=600000) {
+            timeInMillis/60000
+        } else {
+            "0" + (timeInMillis/60000).toInt()
+        }
+        val seconds:Any = if ((timeInMillis % 60000)/1000 > 9) {
+            (timeInMillis % 60000)/1000
+        } else {
+            "0" + (timeInMillis % 60000)/1000
+        }
+        return "$minutes:$seconds"
+    }
+
+    private fun createNotifyChannel(){
+        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.O &&
+                notificationManager?.getNotificationChannel(NOTIFICATION_CHANNEL_ID)==null) {
+            val channel = NotificationChannel(NOTIFICATION_CHANNEL_ID, "timer", NotificationManager.IMPORTANCE_LOW)
+            channel.apply {
+                description = "desc"
+                enableLights(true)
+                lightColor = Color.RED
+                enableVibration(true)
+                vibrationPattern = longArrayOf(100, 200, 300, 400, 500, 400, 300, 200, 400)
+            }
+            notificationManager?.createNotificationChannel(channel)
+        }
     }
 
 
