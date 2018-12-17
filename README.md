@@ -12,7 +12,7 @@ Dois usuários podem se juntar para formar uma dupla com metas "compartilhadas".
 
 ## Análise e Testes
 
--[CPU](https://github.com/SergioTTF/PomodoroCoin/blob/master/cpu.md)
+-[CPU](https://github.com/SergioTTF/PomodoroCoin/blob/master/CPU.md)
 
 -[Memória](https://github.com/SergioTTF/PomodoroCoin/blob/master/memoria.md)
 
