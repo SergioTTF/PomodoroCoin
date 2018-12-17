@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.view.MenuItem
+import com.squareup.leakcanary.LeakCanary
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -18,6 +19,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            // This process is dedicated to LeakCanary for heap analysis.
+            // You should not init your app in this process.
+            return
+        }
+        LeakCanary.install(this.application)
+        // Normal app init code...
         setContentView(R.layout.activity_main)
         supportFragmentManager.beginTransaction().add(R.id.fragmentLayout, profileFragment).hide(profileFragment).commit()
         supportFragmentManager.beginTransaction().add(R.id.fragmentLayout, clockFragment).commit()
