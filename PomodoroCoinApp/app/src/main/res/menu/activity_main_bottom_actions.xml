@@ -4,6 +4,11 @@
     tools:showIn="navigation_view">
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/timer"
+            android:checked="true"
+            android:icon="@drawable/clockicon"
+            android:title="@string/timer" />
+        <item
             android:id="@+id/tasks"
             android:icon="@drawable/taskicon"
             android:title="@string/tasks" />
@@ -11,11 +16,6 @@
             android:id="@+id/tags"
             android:icon="@drawable/tagicon"
             android:title="@string/tags" />
-        <item
-            android:id="@+id/timer"
-            android:checked="true"
-            android:icon="@drawable/clockicon"
-            android:title="@string/timer" />
         <item
             android:id="@+id/profile"
             android:icon="@drawable/profileicon"

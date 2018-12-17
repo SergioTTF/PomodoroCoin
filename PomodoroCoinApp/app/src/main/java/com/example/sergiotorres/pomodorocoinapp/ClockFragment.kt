@@ -10,16 +10,16 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.support.v4.app.ActivityCompat
+import android.os.Vibrator
 import android.support.v4.app.Fragment
 import android.support.v4.app.NotificationCompat
+import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import kotlinx.android.synthetic.main.fragment_clock.*
 import kotlinx.android.synthetic.main.fragment_clock.view.*
-import android.Manifest
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -34,9 +34,10 @@ private const val ARG_PARAM2 = "param2"
 class ClockFragment : Fragment() {
 
     private lateinit var timer: CountDownTimer
+    private var tagSelected = ""
     private var isRunning = false
     private var reseted = true
-    private var timerLength = 15000L
+    private var timerLength = 1500000L
     private var remainingTime = 0L
     private var notificationManager:NotificationManager? = null
     private var notificationIntent:Intent? = null
@@ -54,15 +55,13 @@ class ClockFragment : Fragment() {
         val spinnerAdapter = ArrayAdapter(activity, android.R.layout.simple_spinner_item, mockTags)
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         view.tagSpinner.adapter = spinnerAdapter
-        tagSpinner?.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
+        view.tagSpinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
 
             }
-
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                // either one will work as well
-                // val item = parent.getItemAtPosition(position) as String
-                val item = spinnerAdapter.getItem(position)
+                tagSelected = spinnerAdapter.getItem(position)
+
             }
         }
         view.radioGroup.setOnCheckedChangeListener { _, i ->
@@ -81,6 +80,7 @@ class ClockFragment : Fragment() {
             } else if (reseted) {
                 runTimer()
                 view.playButton.text = getText(R.string.PAUSE)
+                changeTimerButton(true)
                 reseted = false
                 true
             } else {
@@ -95,6 +95,7 @@ class ClockFragment : Fragment() {
             isRunning = false
             reseted = true
             view.playButton.text = getText(R.string.START)
+            changeTimerButton(false)
         }
 
         this.notificationManager = context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -130,15 +131,21 @@ class ClockFragment : Fragment() {
 
             override fun onFinish() {
                 remainingTime = timerLength
+                changeTimerButton(false)
+                timerText.text = "00:00"
+                playButton.text = getText(R.string.START)
                 val notification = NotificationCompat.Builder(context!!, NOTIFICATION_CHANNEL_ID)
                         .setContentTitle("Pomodoro Done!")
-                        .setContentText("blabla")
+                        .setContentText("completed a session on $tagSelected")
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
                         .setContentIntent(contentIntent)
                         .setAutoCancel(true)
+                        .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                         .setSmallIcon(android.R.drawable.ic_lock_idle_alarm)
                         .build()
                 notificationManager?.notify(1, notification)
+                val vibrator: Vibrator = context!!.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+                vibrator.vibrate(2000)
             }
         }
     }
@@ -155,6 +162,22 @@ class ClockFragment : Fragment() {
             "0" + (timeInMillis % 60000)/1000
         }
         return "$minutes:$seconds"
+    }
+    private fun changeTimerButton(active:Boolean) {
+        if (active) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                playButton.setBackgroundDrawable(ContextCompat.getDrawable(context!!, R.drawable.selected_rounded_button))
+            } else {
+                playButton.background = context!!.resources.getDrawable(R.drawable.selected_rounded_button)
+            }
+        } else {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                playButton.setBackgroundDrawable(ContextCompat.getDrawable(context!!, R.drawable.roundedbutton))
+            } else {
+                playButton.background = context!!.resources.getDrawable(R.drawable.roundedbutton)
+            }
+        }
+
     }
 
     private fun createNotifyChannel(){
