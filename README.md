@@ -9,3 +9,13 @@ O usuário tem uma pontuação no aplicativo que é aumentada toda vez que ele c
 Dois usuários podem se juntar para formar uma dupla com metas "compartilhadas". As metas "comapartilhadas" beneficiam ambos os usuário quando são cumpridas, porém também prejudicam ambos quando o prazo acaba. Fazendo com que os usuários tenham que se incentivar para trabalhar juntos e ganhar juntos.
 
 [Link dos Mockups](https://www.fluidui.com/editor/live/preview/cF9BVHVEc21ibTZuTE1VVjhUclVjUzJIVG9zZFhkQUNyeA==)
+
+## Análise e Testes
+
+-[CPU](https://github.com/SergioTTF/PomodoroCoin/blob/master/cpu.md)
+
+-[Memória](https://github.com/SergioTTF/PomodoroCoin/blob/master/memoria.md)
+
+-[Bateria](https://github.com/SergioTTF/PomodoroCoin/blob/master/bateria.md)
+
+-[Uso de Rede](https://github.com/SergioTTF/PomodoroCoin/blob/master/bandwith.md)
