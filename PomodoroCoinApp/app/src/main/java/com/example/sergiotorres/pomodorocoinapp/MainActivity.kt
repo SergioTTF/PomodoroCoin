@@ -15,19 +15,22 @@ class MainActivity : AppCompatActivity() {
 
     val clockFragment = ClockFragment()
     val profileFragment = ProfileFragment()
+    val tagFragment = TagFragment()
     var fragmentActive:Fragment = clockFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         if (LeakCanary.isInAnalyzerProcess(this)) {
             // This process is dedicated to LeakCanary for heap analysis.
             // You should not init your app in this process.
             return
         }
         LeakCanary.install(this.application)
-        // Normal app init code...
+
         setContentView(R.layout.activity_main)
         supportFragmentManager.beginTransaction().add(R.id.fragmentLayout, profileFragment).hide(profileFragment).commit()
+        supportFragmentManager.beginTransaction().add(R.id.fragmentLayout, tagFragment).hide(tagFragment).commit()
         supportFragmentManager.beginTransaction().add(R.id.fragmentLayout, clockFragment).commit()
         bottom_nav_view.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
@@ -45,6 +48,8 @@ class MainActivity : AppCompatActivity() {
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.tags -> {
+                    supportFragmentManager.beginTransaction().hide(fragmentActive).show(tagFragment).commit()
+                    fragmentActive = tagFragment
                     return@setOnNavigationItemSelectedListener true
                 }
             }

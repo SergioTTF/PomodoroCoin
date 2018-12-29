@@ -7,6 +7,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.media.RingtoneManager
 import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -98,6 +99,8 @@ class ClockFragment : Fragment() {
             changeTimerButton(false)
         }
 
+        view.timerText.text = formatTime(timerLength)
+
         this.notificationManager = context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         this.notificationIntent = Intent(context, MainActivity::class.java)
         this.contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0)
@@ -140,12 +143,13 @@ class ClockFragment : Fragment() {
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
                         .setContentIntent(contentIntent)
                         .setAutoCancel(true)
+                        .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                         .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                         .setSmallIcon(android.R.drawable.ic_lock_idle_alarm)
                         .build()
                 notificationManager?.notify(1, notification)
                 val vibrator: Vibrator = context!!.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-                vibrator.vibrate(2000)
+                vibrator.vibrate(500)
             }
         }
     }
